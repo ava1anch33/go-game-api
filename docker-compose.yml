@@ -1,0 +1,56 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"                  
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
+      - MONGO_URI=mongodb://mongo:27017/gogame  
+      - JWT_ACCESS_SECRET=your_very_long_random_access_secret_2026
+      - JWT_REFRESH_SECRET=another_different_long_random_refresh_secret
+      - JWT_ACCESS_EXPIRY=15m
+      - JWT_REFRESH_EXPIRY=7d
+    volumes:
+      - .:/app                      
+      - /app/node_modules            
+    depends_on:
+      - mongo
+    command: npm run dev    
+    networks:
+      - app-net
+
+  frontend:
+    build:
+      context: ../go-plus          
+      dockerfile: Dockerfile       
+    ports:
+      - "5173:5173"                 
+    volumes:
+      - ../go-plus:/app             
+      - /app/node_modules           
+    command: npm run dev            
+    depends_on:
+      - api
+    networks:
+      - app-net
+      
+  mongo:
+    image: mongo:7               
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: gogame
+    networks:
+      - app-net
+
+volumes:
+  mongo-data:
+
+networks:
+  app-net:
+    driver: bridge
