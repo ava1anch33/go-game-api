@@ -18,7 +18,7 @@ const login = async (req, res, next) => {
 
     const accessToken = user.generateAccessToken();
     const refreshToken = await user.generateRefreshToken();
-
+    
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -28,7 +28,7 @@ const login = async (req, res, next) => {
 
     successResponse(res, {
       accessToken,
-      user: { id: user._id, email: user.email, role: user.role }
+      user: { email: user.email }
     });
   } catch (err) {
     next(err);

@@ -25,6 +25,7 @@ class UserService {
 
   async login(email, password) {
     const user = await userRepository.findByEmail(email);
+    
     if (!user) {
       throw new AppError('Invalid credentials', 401, 'INVALID_CREDENTIALS');
     }
@@ -41,6 +42,14 @@ class UserService {
 
   async getUserById(id) {
     const user = await userRepository.findById(id);
+    if (!user) {
+      throw new AppError('User not found', 404, 'USER_NOT_FOUND');
+    }
+    return user;
+  }
+
+  async getUserByEmail(email) {
+    const user = await userRepository.findByEmail(email);
     if (!user) {
       throw new AppError('User not found', 404, 'USER_NOT_FOUND');
     }

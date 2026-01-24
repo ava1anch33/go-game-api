@@ -1,3 +1,6 @@
+import AppError from '../utils/AppError.js';
+import jwt from 'jsonwebtoken';
+
 const VALID_API_KEY = process.env.API_KEY;
 
 if (!VALID_API_KEY) {
@@ -47,7 +50,6 @@ export const protect = async (req, res, next) => {
   }
 };
 
-// 角色限制（可選）
 export const restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {

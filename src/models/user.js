@@ -10,14 +10,6 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    username: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      minlength: 3,
-      maxlength: 30,
-    },
     password: {
       type: String,
       required: true,
@@ -52,6 +44,8 @@ const userSchema = new mongoose.Schema(
       },
       phoneCode: String,
       phone: String,
+      firstName: String,
+      LastName: String
     },
     googleId: { type: String, default: null },
     wechatId: { type: String, default: null },
@@ -94,10 +88,10 @@ userSchema.methods.generateRefreshToken = async function () {
   const expiredAt = new Date();
   expiredAt.setDate(expiredAt.getDate() + expiresInDays);
 
-  this.refreshTokens.push({
+  this.refreshTokens = [{
     token: refreshToken,
     expiredAt
-  });
+  }];
 
   await this.save();
   return refreshToken;
