@@ -40,6 +40,10 @@ class UserService {
     return user;
   }
 
+  async clearAllRefreshTokens(userId) {
+    await userRepository.clearRefreshTokens(userId)
+  }
+
   async getUserById(id) {
     const user = await userRepository.findById(id);
     if (!user) {

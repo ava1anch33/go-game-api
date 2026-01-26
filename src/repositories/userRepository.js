@@ -38,6 +38,12 @@ class UserRepository {
   async deleteById(id) {
     return User.findByIdAndDelete(id);
   }
+
+  async clearRefreshTokens(userId) {
+    await User.findByIdAndUpdate(userId, {
+      $set: { refreshTokens: [] }
+    });
+  }
 }
 
 export const userRepository = new UserRepository();

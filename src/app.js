@@ -9,7 +9,16 @@ import routes from './routes/index.js';
 const app = express();
 
 app.use(morgan('dev'));
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'http://frontend:5173'       // 如果前端容器也取名 frontend
+  ],
+  credentials: true,             // 必須！
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key']
+}));
+app.options('*', cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

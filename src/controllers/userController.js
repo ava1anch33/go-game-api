@@ -11,6 +11,21 @@ async function getUserInfo(req, res, next) {
     }
 }
 
+async function logout(req, res, next) {
+    try {
+        const currentUser = req.user;
+        if (!currentUser) {
+            return successResponse(res, { message: "ok" });
+        }
+        await userService.clearAllRefreshTokens(currentUser._id);
+        successResponse(res, {
+            message: "ok"
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
 async function updateUserInfo(req, res, next) {
     try {
         const { user: newUserInfo } = req.body
@@ -31,5 +46,6 @@ function formatReturnUser(user, res) {
 
 export default {
     getUserInfo,
-    updateUserInfo
+    updateUserInfo,
+    logout
 }
