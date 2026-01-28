@@ -24,11 +24,12 @@ async function createNewGame(req, res, next) {
 async function aiThinking(req, res, next) {
     try {
         const currentUser = checkUserExist(req)
-        const { board, gameId, currentPlayer:cPlayer } = req.body;
+        const { board, gameId, currentPlayer:cPlayer, aiAttempts } = req.body;
 
-        const { board: newBoard, currentPlayer } = await gameService.aiThinking(board, gameId, cPlayer)
+        const { aiSuccess, board: newBoard, currentPlayer } = await gameService.aiThinking(board, gameId, cPlayer, aiAttempts)
 
         successResponse(res, {
+            aiSuccess,
             gameId,
             board: Array.from(board),
             currentPlayer

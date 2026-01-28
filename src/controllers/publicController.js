@@ -14,6 +14,8 @@ const register = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   try {
+    console.log(66666);
+    
     const user = await userService.login(req.body.email, req.body.password);
 
     const accessToken = user.generateAccessToken();
@@ -23,7 +25,7 @@ const login = async (req, res, next) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 天
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
     successResponse(res, {

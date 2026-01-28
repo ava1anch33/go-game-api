@@ -30,10 +30,9 @@ class GameService {
         return { gameId, board, currentPlayer }
     }
 
-    async aiThinking(passBoard, gameId, cPlayer) {
-        const ai = new SimpleGoAI(cloneBoard(passBoard), 2);
-        const aiMove = ai.think(2);
-        console.log(aiMove);
+    async aiThinking(passBoard, gameId, cPlayer, aiAttempts = 2) {
+        const ai = new SimpleGoAI(cloneBoard(passBoard), aiAttempts);
+        const aiMove = ai.think(cPlayer);
 
         let aiSuccess = false;
         if (aiMove) {
@@ -41,11 +40,9 @@ class GameService {
             captureGroups(passBoard, aiMove.x, aiMove.y, cPlayer);
             aiSuccess = true;
         }
-
         const currentPlayer = this.toggleCurrentPlayer(cPlayer);
         await gameRepository.updateGameInfo(passBoard, gameId, currentPlayer);
-
-        return { board: passBoard, currentPlayer };
+        return { aiSuccess, board: passBoard, currentPlayer };
     }
 }
 
