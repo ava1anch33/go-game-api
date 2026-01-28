@@ -23,7 +23,6 @@ async function createNewGame(req, res, next) {
 
 async function aiThinking(req, res, next) {
     try {
-        const currentUser = checkUserExist(req)
         const { board, gameId, currentPlayer:cPlayer, aiAttempts } = req.body;
 
         const { aiSuccess, board: newBoard, currentPlayer } = await gameService.aiThinking(board, gameId, cPlayer, aiAttempts)
@@ -31,7 +30,7 @@ async function aiThinking(req, res, next) {
         successResponse(res, {
             aiSuccess,
             gameId,
-            board: Array.from(board),
+            board: Array.from(newBoard),
             currentPlayer
         });  
     } catch (error) {
@@ -39,7 +38,18 @@ async function aiThinking(req, res, next) {
     }
 }
 
+async function endGame(req, res, next) {
+    try {
+        const { gameId, board } = req.body;
+        await gameService.endGame(board, gameId);
+        successResponse(res);  
+    } catch (error) {
+        next(error)
+    }
+}
+
 export default {
     createNewGame,
-    aiThinking
+    aiThinking,
+    endGame
 }

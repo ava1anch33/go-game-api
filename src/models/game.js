@@ -22,7 +22,7 @@ const gameSchema = new mongoose.Schema(
     },
     status: {
         type: String,
-        enum: ['active', 'finished', 'saved', 'resigned'],
+        enum: ['active', 'finished'],
         default: 'active'
     },
     createdAt: {

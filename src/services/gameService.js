@@ -44,6 +44,13 @@ class GameService {
         await gameRepository.updateGameInfo(passBoard, gameId, currentPlayer);
         return { aiSuccess, board: passBoard, currentPlayer };
     }
+
+    async endGame(board, gameId) {
+        await gameRepository.endGame(
+            gameId, 
+            board
+        )
+    }
 }
 
 export const gameService = new GameService()

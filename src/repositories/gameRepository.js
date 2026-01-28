@@ -26,17 +26,41 @@ class GameRepository {
     return newGame.id;
   }
 
-  async updateGameInfo(board, gameId, currentPlayer) {
-      const gameDoc = await Game.findById(gameId);
-
-      if (!gameDoc) {
-        throw new Error(`Game not found with gameId: ${gameId}`);
-      }
-
-      gameDoc.board = Array.from(board);
-      gameDoc.currentPlayer = currentPlayer;
-      await gameDoc.save();
+  async endGame(gameId, board) {
+    await Game.findOneAndUpdate(
+        { _id: gameId },
+        {
+            $set: {
+                board: Array.from(board),
+                status: 'finished',
+            },
+        },
+        {
+            new: true,         
+            runValidators: true
+        }
+    )
   }
+
+  async updateGameInfo(
+    board,
+    gameId,
+    currentPlayer,
+  ) {
+        await Game.findOneAndUpdate(
+            { _id: gameId },
+            {
+                $set: {
+                    board: Array.from(board),
+                    currentPlayer,
+                },
+            },
+            {
+                new: true,         
+                runValidators: true
+            }
+        )
+    }
 }
 
 export const gameRepository = new GameRepository();

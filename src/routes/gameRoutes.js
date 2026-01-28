@@ -7,5 +7,6 @@ router.use(protect);
 
 router.post('/create-new-game', gameController.createNewGame)
 router.post('/ai-thinking', gameController.aiThinking)
+router.post('/end-game', gameController.endGame)
 
 export default router;
