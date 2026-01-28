@@ -3,10 +3,27 @@ import { userService } from '../services/index.js';
 import AppError from '../utils/AppError.js';
 import { successResponse } from '../utils/index.js';
 
+async function handleToken(user, res) {
+  const accessToken = user.generateAccessToken();
+  const refreshToken = await user.generateRefreshToken();
+  
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  });
+
+  successResponse(res, {
+    accessToken,
+    user: { email: user.email }
+  });
+}
+
 const register = async (req, res, next) => {
   try {
     const user = await userService.register(req.body);
-    successResponse(res, user, null, 201);
+    await handleToken(user, res)
   } catch (err) {
     next(err);
   }
@@ -14,24 +31,8 @@ const register = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   try {
-    console.log(66666);
-    
-    const user = await userService.login(req.body.email, req.body.password);
-
-    const accessToken = user.generateAccessToken();
-    const refreshToken = await user.generateRefreshToken();
-    
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    });
-
-    successResponse(res, {
-      accessToken,
-      user: { email: user.email }
-    });
+    const user = await userService.login(req.body);
+    await handleToken(user, res)
   } catch (err) {
     next(err);
   }

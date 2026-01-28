@@ -18,23 +18,7 @@ services:
       - /app/node_modules            
     depends_on:
       - mongo
-      - python-cv
     command: npm run dev    
-    networks:
-      - app-net
-
-  python-cv:
-    build:
-      context: ../go-open-cv
-      dockerfile: Dockerfile
-    ports:
-      - "5001:5001"
-    volumes:
-      - ../go-open-cv:/app
-      - stonenet-model:/app/models
-    environment:
-      - PYTHONUNBUFFERED=1
-    restart: unless-stopped
     networks:
       - app-net
 
@@ -66,7 +50,6 @@ services:
 
 volumes:
   mongo-data:
-  stonenet-model:
 
 networks:
   app-net:

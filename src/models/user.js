@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema(
       phoneCode: String,
       phone: String,
       firstName: String,
-      LastName: String
+      lastName: String
     },
     googleId: { type: String, default: null },
     wechatId: { type: String, default: null },

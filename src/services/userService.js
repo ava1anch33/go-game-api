@@ -4,13 +4,10 @@ import AppError from '../utils/AppError.js';
 
 class UserService {
   async register(userData) {
-    const { email, username, password } = userData;
+    const { email, password } = userData;
 
     if (await userRepository.findByEmail(email)) {
       throw new AppError('Email already exists', 409, 'EMAIL_DUPLICATE');
-    }
-    if (await userRepository.findByUsername(username)) {
-      throw new AppError('Username already exists', 409, 'USERNAME_DUPLICATE');
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -23,7 +20,8 @@ class UserService {
     return newUser;
   }
 
-  async login(email, password) {
+  async login(userData) {
+    const { email, password } = userData;
     const user = await userRepository.findByEmail(email);
     
     if (!user) {
