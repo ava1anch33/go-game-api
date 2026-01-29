@@ -15,8 +15,7 @@ async function handleToken(user, res) {
   });
 
   successResponse(res, {
-    accessToken,
-    user: { email: user.email }
+    accessToken
   });
 }
 

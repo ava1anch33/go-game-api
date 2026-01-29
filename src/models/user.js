@@ -14,14 +14,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    isActive: {
-      type: Boolean,
-      default: true,
-    },
-    isEmailVerified: {
-      type: Boolean,
-      default: false,
-    },
     lastLoginAt: {
       type: Date,
     },
@@ -34,7 +26,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['user', 'admin', 'premium'],
+      enum: ['user', 'premium'],
       default: 'user',
     },
     profile: {
@@ -101,5 +93,26 @@ userSchema.methods.invalidateRefreshToken = async function (token) {
   this.refreshTokens = this.refreshTokens.filter(rt => rt.token !== token);
   await this.save();
 };
+
+userSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform(doc, ret) {
+    ret.id = ret._id.toString()
+    delete ret._id
+    delete ret.password
+    delete ret.refreshTokens
+    delete ret.googleId
+    delete ret.wechatId
+    delete ret.githubId
+
+    return ret
+  },
+})
+
+userSchema.set('toObject', {
+  virtuals: true,
+  versionKey: false,
+})
 
 export default mongoose.model('User', userSchema);
